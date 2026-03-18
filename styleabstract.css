@@ -52,58 +52,73 @@ header {
 }
 
 nav {
-  display: flex;
-  align-items: center;
-  gap: 30px;
-}
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 12px 20px;
+    }
 
-nav a {
-  color: white;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.2s;
-}
+    nav img {
+      width: 160px;
+    }
 
-nav a:hover {
-  color: #f97316;
-}
+    nav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
 
-.dropdown {
-  position: relative;
-}
+    nav a:hover {
+      color: #f97316;
+    }
 
-.dropdown-content {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  background: #020617;
-  min-width: 180px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.3s ease;
-  pointer-events: none;
-}
+    /* контейнер */
+    .dropdown {
+    position: relative;
+    }
 
-.dropdown-content a {
-  display: block;
-  padding: 12px 16px;
-  text-decoration: none;
-  color: #e5e7eb;
-  transition: background 0.2s;
-}
+    /* скрытый список */
+    .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #020617;
+    min-width: 180px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s ease;
+    pointer-events: none;
+    }
 
-.dropdown-content a:hover {
-  background: #1e293b;
-  color: #f97316;
-}
+    /* ссылки внутри */
+    .dropdown-content a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #e5e7eb;
+    transition: background 0.2s;
+    }
 
-.dropdown:hover .dropdown-content {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
+    .dropdown-content a:hover {
+    background: #1e293b;
+    color: #f97316;
+    }
+
+    /* появление при наведении */
+    .dropdown:hover .dropdown-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    }
+
 
 /* ====== СЕКЦИЯ НОВОСТЕЙ ====== */
 #news {
