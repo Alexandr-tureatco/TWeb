@@ -1,0 +1,231 @@
+/* ====== ОБЩИЙ ФОН НА ВЕСЬ САЙТ ====== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0b0f17;
+    color: #e5e7eb;
+  z-index: 1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ====== HEADER ====== */
+header {
+  padding: 15px 40px;
+  min-height: 60px;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  width: 160px;
+}
+
+.logo img {
+  width: 100%;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: block;
+}
+
+.logo-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.logo:hover .logo-hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.logo:hover .logo-default {
+  opacity: 0;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+nav a:hover {
+  color: #f97316;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #020617;
+  min-width: 180px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #e5e7eb;
+  transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+  background: #1e293b;
+  color: #f97316;
+}
+
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* ====== СЕКЦИЯ НОВОСТЕЙ ====== */
+#news {
+  margin-top: 80px;
+  padding: 40px;
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+#news h2 {
+  font-size: 42px;
+  margin-bottom: 40px;
+}
+
+/* ====== СЕТКА КАРТОЧЕК ====== */
+.d2-news-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 25px;
+}
+
+/* ====== КАРТОЧКА ====== */
+.d2-news-card {
+  width: min(900px, 100%);
+  flex: 0 0 auto;
+
+  border-radius: 16px;
+  overflow: hidden;
+  background: #0b0f17;
+  box-shadow: 0 15px 40px rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.06);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.d2-news-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 70px rgba(0,0,0,.6);
+}
+
+/* ====== ВНУТРИ КАРТОЧКИ ====== */
+.d2-news-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.d2-news-media {
+  position: relative;
+  height: 420px;
+}
+
+.d2-news-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.d2-news-card:hover .d2-news-img {
+  transform: scale(1.07);
+}
+
+.d2-news-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,.9) 0%,
+    rgba(0,0,0,.3) 50%,
+    rgba(0,0,0,0) 100%
+  );
+}
+
+.d2-news-meta {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+}
+
+.d2-news-date {
+  font-size: 14px;
+  opacity: .8;
+  margin-bottom: 6px;
+}
+
+.d2-news-title {
+  font-size: 22px;
+  margin: 0 0 10px 0;
+}
+
+.d2-news-preview {
+  font-size: 15px;
+  opacity: .85;
+  margin: 0;
+}
+
+.simple-card {
+  background: #020617;
+  min-height: auto;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #020617;
+  color: #9ca3af;
+  margin-top: 80px;
+}
+
+/* ====== МОБИЛЬНАЯ АДАПТАЦИЯ ====== */
+@media (max-width: 600px) {
+  .d2-news-media {
+    height: 280px;
+  }
+  #news h2 {
+    font-size: 30px;
+  }
+}
