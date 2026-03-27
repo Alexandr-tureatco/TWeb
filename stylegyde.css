@@ -1,0 +1,294 @@
+/* ====== ОБЩИЙ ФОН НА ВЕСЬ САЙТ ====== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #0b0f17;
+      color: #e5e7eb;
+    }
+
+* {
+  box-sizing: border-box;
+}
+
+/* ====== HEADER ====== */
+header {
+  padding: 15px 40px;
+  min-height: 60px;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+  width: 160px;
+}
+
+.logo img {
+  width: 100%;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  display: block;
+}
+
+.logo-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+}
+
+.logo:hover .logo-hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.logo:hover .logo-default {
+  opacity: 0;
+}
+    nav {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: 3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      padding: 12px 20px;
+    }
+
+    nav img {
+      width: 160px;
+    }
+
+    nav a {
+      color: #e5e7eb;
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s;
+    }
+
+    nav a:hover {
+      color: #f97316;
+    }
+
+    /* контейнер */
+    .dropdown {
+    position: relative;
+    }
+
+    /* скрытый список */
+    .dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #020617;
+    min-width: 180px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s ease;
+    pointer-events: none;
+    }
+
+    /* ссылки внутри */
+    .dropdown-content a {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: #e5e7eb;
+    transition: background 0.2s;
+    }
+
+    .dropdown-content a:hover {
+    background: #1e293b;
+    color: #f97316;
+    }
+
+    /* появление при наведении */
+    .dropdown:hover .dropdown-content {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    }
+/* ====== СЕКЦИЯ ГАЙДОВ ====== */
+.guides-wrap{
+  margin: 0 auto;
+  padding: 28px 18px 70px;
+  color: #fff;
+}
+
+.guides-wrap h1{
+  margin: 18px 0 10px;
+  font-size: 44px;
+  letter-spacing: .5px;
+}
+
+.guides-wrap .sub{
+  margin: 0 0 26px;
+  opacity:.85;
+  max-width: 75ch;
+  line-height: 1.55;
+}
+
+.lane{ margin-top: 26px; }
+
+.lane-title{
+  display:flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 12px;
+}
+
+.lane-title h2{
+  margin:0;
+  font-size: 26px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+}
+
+.lane-title .hint{
+  font-size: 13px;
+  opacity: .75;
+}
+
+/* ====== КАРУСЕЛИ РЯДОВ ====== */
+.ticker{
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 15px 40px rgba(0,0,0,.35);
+}
+
+.ticker::before,
+.ticker::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width: 90px;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.ticker::before{
+  left:0;
+  background: linear-gradient(to right, rgba(10,18,35,.95), rgba(10,18,35,0));
+}
+
+.ticker::after{
+  right:0;
+  background: linear-gradient(to left, rgba(10,18,35,.95), rgba(10,18,35,0));
+}
+
+.track{
+  display:flex;
+  gap: 14px;
+  padding: 16px;
+  width: max-content;
+  will-change: transform;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-duration: var(--speed, 32s);
+}
+
+.to-right .track{ animation-name: scrollRight; }
+.to-left  .track{ animation-name: scrollLeft;  }
+
+/* пауза при наведении */
+.ticker:hover .track{ animation-play-state: paused; }
+
+@keyframes scrollLeft{
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes scrollRight{
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+/* ====== КАРТОЧКИ ГЕРОЕВ ====== */
+.hero-card{
+  width: 220px;
+  height: 140px;
+  border-radius: 14px;
+  overflow:hidden;
+  position: relative;
+  border: 1px solid rgba(255,255,255,.08);
+  background: #0b0f17;
+  flex: 0 0 auto;
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.hero-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 20px 50px rgba(0,0,0,.55);
+}
+
+.hero-card img{
+  width:100%;
+  height:100%;
+  object-fit: cover;
+  transform: scale(1.02);
+  display:block;
+}
+
+.hero-overlay{
+  position:absolute;
+  inset:0;
+  background: linear-gradient(to top, rgba(0,0,0,.82), rgba(0,0,0,.18));
+}
+
+.hero-name{
+  position:absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 10px;
+  margin:0;
+  font-weight: 800;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+  font-size: 14px;
+  line-height: 1.15;
+  text-shadow: 0 6px 18px rgba(0,0,0,.6);
+}
+
+.hero-tag{
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 12px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.45);
+  border: 1px solid rgba(255,255,255,.12);
+  opacity: .92;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #020617;
+  color: #9ca3af;
+  margin-top: 80px;
+}
+
+@media (max-width: 700px){
+  .guides-wrap h1{ font-size: 32px; }
+  .hero-card{ width: 190px; height: 120px; }
+  .ticker::before, .ticker::after{ width: 55px; }
+  .track{ animation-duration: 26s; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .track{ animation: none !important; }
+}
