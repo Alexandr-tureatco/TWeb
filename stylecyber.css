@@ -119,7 +119,7 @@ header {
     }
 
 /* ====== СЕКЦИЯ НОВОСТЕЙ ====== */
-#news {
+#cybersport{
   margin-top: 80px;
   padding: 40px;
   display:flex;
@@ -128,7 +128,7 @@ header {
 
 }
 
-#news h2 {
+#cybersport h2 {
   font-size: 42px;
   margin-bottom: 40px;
 }
