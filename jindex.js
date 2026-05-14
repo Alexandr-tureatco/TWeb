@@ -1,29 +1,59 @@
 
     function niceName(file) {
-      // anti_mage.png -> Anti Mage
-      const base = file.replace(/\.[^.]+$/, '');
-      return base
+    const base = file.replace(/\.[^.]+$/, '');
+    return base
         .replace(/[_-]+/g, ' ')
         .replace(/\b\w/g, c => c.toUpperCase());
+}
+
+// Ждем отрисовки кадра, чтобы браузер успел посчитать ширину элементов
+function waitNextFrame() {
+    return new Promise(r => requestAnimationFrame(() => r()));
+}
+
+/**
+ * 2. ЛОГИКА АВТОРИЗАЦИИ И НИКА
+ */
+async function checkAuthAndLoadUser() {
+    try {
+        const res = await fetch('/api/me');
+        if (res.ok) {
+            const data = await res.json();
+            // Ищем кнопку ника в дропдауне (по тексту или классу)
+            const userNameBtn = document.querySelector('.dropbtn');
+            if (userNameBtn && data.username) {
+                // Если это кнопка "ГЛАВНАЯ", не трогаем её, ищем именно ту, где был "НИК"
+                // В твоем HTML это последний элемент nav
+                const dropdowns = document.querySelectorAll('.dropbtn');
+                const lastBtn = dropdowns[dropdowns.length - 1];
+                lastBtn.innerText = data.username.toUpperCase() + " ▾";
+            }
+        } else {
+            // Если сервер сказал "401 Unauthorized" — на выход
+            window.location.href = "/login.html";
+        }
+    } catch (err) {
+        console.error("Ошибка проверки сессии:", err);
     }
+}
 
-    function waitNextFrame() {
-      return new Promise(r => requestAnimationFrame(() => r()));
-    }
+/**
+ * 3. ПОСТРОЕНИЕ ЛЕНТЫ ГЕРОЕВ
+ */
+async function buildHeroes() {
+    const track = document.getElementById('heroTrack');
+    const marquee = document.querySelector('.hero-marquee');
+    if (!track || !marquee) return;
 
-    async function buildHeroes() {
-      const track = document.getElementById('heroTrack');
+    // Загружаем список имен файлов из JSON
+    const res = await fetch('./heroes.json', { cache: 'no-store' });
+    if (!res.ok) throw new Error('Не найден heroes.json');
 
-      // ⚠️ если heroes.json рядом с html — './heroes.json'
-      // если в корне сайта — '/heroes.json'
-      const res = await fetch('./heroes.json', { cache: 'no-store' });
-      if (!res.ok) throw new Error('Не найден heroes.json');
+    const files = await res.json();
+    const originals = [];
 
-      const files = await res.json();
-
-      // 1) создаём оригинальные карточки (без дублей в HTML)
-      const originals = [];
-      for (const file of files) {
+    // 1) Создаём оригинальные карточки
+    files.forEach(file => {
         const name = niceName(file);
 
         const a = document.createElement('a');
@@ -38,72 +68,71 @@
         a.appendChild(title);
         track.appendChild(a);
         originals.push(a);
-      }
+    });
 
-      // даём браузеру отрисовать, чтобы размеры были корректные
-      await waitNextFrame();
+    await waitNextFrame();
 
-      // 2) считаем ширину оригинального набора
-      const gap = 16; // должно совпадать с CSS gap
-      let originalWidth = 0;
-      for (const el of originals) {
-        originalWidth += el.getBoundingClientRect().width;
-      }
-      originalWidth += (originals.length - 1) * gap;
+    // 2) Рассчитываем ширину для бесконечного скролла
+    const gap = 16; // Должно совпадать с CSS gap в .hero-track
+    let loopWidth = 0;
+    originals.forEach(el => {
+        loopWidth += el.getBoundingClientRect().width;
+    });
+    loopWidth += (originals.length - 1) * gap;
 
-      // Если мало карточек и ширина меньше экрана — доклоним, чтобы лента не выглядела пусто
-      // (но всё равно без ручного дубля — это JS)
-      const marquee = document.querySelector('.hero-marquee');
-      const needWidth = marquee.getBoundingClientRect().width * 2;
-
-      while (originalWidth < needWidth) {
-        for (const el of originals) {
-          const clone = el.cloneNode(true);
-          clone.setAttribute('aria-hidden', 'true');
-          clone.style.pointerEvents = 'none';
-          track.appendChild(clone);
-          originalWidth += el.getBoundingClientRect().width + gap;
-          if (originalWidth >= needWidth) break;
-        }
-      }
-
-      // 3) теперь делаем “хвост” для бесшовности: клон первого набора
-      originals.forEach(el => {
+    // 3) Создаём "хвост" (клоны) для бесшовности
+    originals.forEach(el => {
         const clone = el.cloneNode(true);
         clone.setAttribute('aria-hidden', 'true');
         clone.style.pointerEvents = 'none';
         track.appendChild(clone);
-      });
-
-      await waitNextFrame();
-
-      // 4) запускаем бесконечный скролл
-      // скорость в px/сек (меняй как хочешь)
-      const SPEED = 140;
-
-      // путь прокрутки = ширина оригинального набора (самого первого списка, без хвоста)
-      // пересчитаем точнее по первым N оригиналам:
-      let loopWidth = 0;
-      for (const el of originals) loopWidth += el.getBoundingClientRect().width;
-      loopWidth += (originals.length - 1) * gap;
-
-      const durationMs = (loopWidth / SPEED) * 1000;
-
-      // анимация через Web Animations API (не требует keyframes в CSS)
-      const anim = track.animate(
-        [
-          { transform: 'translateX(0)' },
-          { transform: `translateX(-${loopWidth}px)` }
-        ],
-        { duration: durationMs, iterations: Infinity, easing: 'linear' }
-      );
-
-      // пауза/плей при наведении именно на область marquee
-      marquee.addEventListener('mouseenter', () => anim.pause());
-      marquee.addEventListener('mouseleave', () => anim.play());
-    }
-
-    buildHeroes().catch(err => {
-      console.error(err);
-      alert('Ошибка: ' + err.message + '\\nПроверь, что heroes.json лежит рядом с HTML, а картинки в img/heroes/');
     });
+
+    // 4) Запуск анимации через Web Animations API
+    const SPEED = 100; // пикселей в секунду
+    const durationMs = (loopWidth / SPEED) * 1000;
+
+    const anim = track.animate(
+        [
+            { transform: 'translateX(0)' },
+            { transform: `translateX(-${loopWidth + gap}px)` }
+        ],
+        {
+            duration: durationMs,
+            iterations: Infinity,
+            easing: 'linear'
+        }
+    );
+
+    // Пауза при наведении
+    marquee.addEventListener('mouseenter', () => anim.pause());
+    marquee.addEventListener('mouseleave', () => anim.play());
+}
+
+/**
+ * 4. ОБРАБОТКА ВЫХОДА
+ */
+function setupLogout() {
+    // Ищем ссылку "выход" внутри dropdown-content
+    const logoutLinks = document.querySelectorAll('.dropdown-content a');
+    logoutLinks.forEach(link => {
+        if (link.textContent.toLowerCase().includes('выход')) {
+            link.addEventListener('click', async (e) => {
+                e.preventDefault();
+                const res = await fetch('/logout');
+                if (res.ok) {
+                    window.location.href = "/login.html";
+                }
+            });
+        }
+    });
+}
+
+/**
+ * ИНИЦИАЛИЗАЦИЯ ПРИ ЗАГРУЗКЕ
+ */
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkAuthAndLoadUser(); // Сначала безопасность
+    buildHeroes().catch(console.error); // Затем визуал
+    setupLogout(); // Затем кнопки
+});

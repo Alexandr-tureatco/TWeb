@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dota 2 — фан-сайт</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+    <link rel="stylesheet" href="stylenews.css" />
+    <link rel="stylesheet" href="stylereg.css" />
+  </head> 
+  <body>
+    <header>
+      <nav>
+  <a href="index.html" class="logo">
+    <img src="img/dota2_logo_horiz.png" class="logo-default" alt="Dota 2">
+    <img src="img/dota_footer_logo.png" class="logo-hover" alt="Dota 2 Red">
+  </a>
+
+  </a>
+
+  <div class="dropdown">
+    <a href="index.html" class="dropbtn">Главная ▾</a>
+    <div class="dropdown-content">
+      <a href="index.html#main">Битва</a>
+      <a href="index.html#about-dota">О Доте</a>
+      <a href="index.html#roles">Роли</a>
+      <a href="index.html#basics">Основы</a>
+      <a href="index.html#tips">Советы</a>
+    </div>
+  </div>
+  <div class="dropdown">
+   <a href="news.html" class="dropbtn">Обновления</a>
+  </div>
+    <div class="dropdown">
+          <a href="gyde.html" class="dropbtn">Гайды ▾</a>
+          <div class="dropdown-content">
+            <a href="gyde.html#guides">По линиям</a>
+          </div>
+        </div>
+    <div class="dropdown">
+   <a href="cyber.html" class="dropbtn">Киберспорт</a>
+  </div>
+      <div class="dropdown">
+   <a href="abstractfacts.html" class="dropbtn">Интересное</a>
+  </div>
+</nav>
+    </header>
+
+    <section id="registration">
+<section id="loginandreg">
+<h2>Регистрация</h2>
+</section>
+<div class="form-container">
+  <form id="registerForm">
+    <input type="text" name="username" placeholder="Имя" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+
+    <button type="submit">Зарегистрироваться</button>
+    <button type="button" id="loginBtn" style="margin-top: 10px; background-color: #555;">Уже есть аккаунт? Войти</button>
+    
+    <p id="message"></p>
+  </form>
+</div>
+
+<script>
+  // 1. Обработка регистрации
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const messageElement = document.getElementById("message");
+
+    try {
+      const response = await fetch("/register", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      messageElement.innerText = result.message;
+
+      // Если регистрация успешна (код 200)
+      if (response.ok && result.redirect) {
+        messageElement.style.color = "green";
+        setTimeout(() => {
+          window.location.href = result.redirect;
+        }, 1500); // Даем пользователю время прочитать "Успешно"
+      } else {
+        messageElement.style.color = "red";
+      }
+    } catch (error) {
+      messageElement.innerText = "❌ Ошибка соединения с сервером";
+    }
+  });
+
+  // 2. Логика кнопки "Вход" (вынесена отдельно, чтобы работала всегда)
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    window.location.href = "/login.html"; 
+  });
+</script>
+  </body>
+</html>

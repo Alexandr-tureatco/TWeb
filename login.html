@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dota 2 — фан-сайт</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+    <link rel="stylesheet" href="stylenews.css" />
+    <link rel="stylesheet" href="stylereg.css" />
+
+  </head> 
+  <body>
+    <header>
+      <nav>
+  <a href="index.html" class="logo">
+    <img src="img/dota2_logo_horiz.png" class="logo-default" alt="Dota 2">
+    <img src="img/dota_footer_logo.png" class="logo-hover" alt="Dota 2 Red">
+  </a>
+
+  </a>
+
+  <div class="dropdown">
+    <a href="index.html" class="dropbtn">Главная ▾</a>
+    <div class="dropdown-content">
+      <a href="index.html#main">Битва</a>
+      <a href="index.html#about-dota">О Доте</a>
+      <a href="index.html#roles">Роли</a>
+      <a href="index.html#basics">Основы</a>
+      <a href="index.html#tips">Советы</a>
+    </div>
+  </div>
+  <div class="dropdown">
+   <a href="news.html" class="dropbtn">Обновления</a>
+  </div>
+    <div class="dropdown">
+          <a href="gyde.html" class="dropbtn">Гайды ▾</a>
+          <div class="dropdown-content">
+            <a href="gyde.html#guides">По линиям</a>
+          </div>
+        </div>
+    <div class="dropdown">
+   <a href="cyber.html" class="dropbtn">Киберспорт</a>
+  </div>
+      <div class="dropdown">
+   <a href="abstractfacts.html" class="dropbtn">Интересное</a>
+  </div>
+</nav>
+    </header>
+<section id="loginandreg">
+<h2>Вход</h2>
+</section>
+
+<div class="form-container">
+  <form id="loginForm">
+    <input type="email" name="email" placeholder="Email" required>
+    <input type="password" name="password" placeholder="Пароль" required>
+
+    <button type="submit">Войти</button>
+    
+    <button type="button" id="regBtn" style="margin-top: 10px; background-color: #555;">Регистрация</button>
+    
+    <p id="message"></p>
+  </form>
+</div>
+
+<script>
+  // --- Логика Входа ---
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+
+    const response = await fetch("/login", {
+      method: "POST",
+      body: formData
+    });
+
+    const result = await response.json();
+
+    // Если вход успешен, перенаправляем на главную
+    if (response.ok && result.redirect) {
+        window.location.href = result.redirect;
+    } else {
+        // Если ошибка, показываем сообщение (например, "Неверный пароль")
+        document.getElementById("message").innerText = result.message;
+    }
+  });
+
+  // --- Логика перехода на Регистрацию ---
+  document.getElementById("regBtn").addEventListener("click", () => {
+    window.location.href = "/registration.html";
+  });
+</script>
+
+  </body>
+</html>
